@@ -12,31 +12,26 @@ interface Props {
   options: Array<{ key: number; label: string }>;
 }
 
-class ValidSelect extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-  render(): JSX.Element {
-    return (
-      <TextField
-        select
-        id={this.props.id}
-        label={this.props.label}
-        value={this.props.value}
-        error={this.props.error}
-        onChange={(event: React.ChangeEvent<{ value: string }>) =>
-          this.props.onChange(event)
-        }
-        helperText={this.props.helperText}
-      >
-        {this.props.options.map((option) => (
-          <MenuItem key={option.key} value={option.label}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-    );
-  }
-}
+const ValidSelect = (props: Props): JSX.Element => {
+  return (
+    <TextField
+      select
+      id={props.id}
+      label={props.label}
+      value={props.value}
+      error={props.error}
+      onChange={(event: React.ChangeEvent<{ value: string }>) =>
+        props.onChange(event)
+      }
+      helperText={props.helperText}
+    >
+      {props.options.map((option) => (
+        <MenuItem key={option.key} value={option.label}>
+          {option.label}
+        </MenuItem>
+      ))}
+    </TextField>
+  );
+};
 
 export default ValidSelect;

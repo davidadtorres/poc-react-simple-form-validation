@@ -3,22 +3,22 @@ import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import ValidTextField from "../ValidTextField/ValidTextField";
 import ValidSelect from "../ValidSelect/ValidSelect";
+import Typography from "@material-ui/core/Typography";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(5),
-      marginLeft: theme.spacing(5),
+      margin: theme.spacing(5),
       "& .MuiTextField-root": {
         margin: theme.spacing(1),
-        width: 200,
+        width: "95%",
       },
     },
     title: {
-      maxWidth: 200,
       textAlign: "center",
-      color: "#F00",
-      fontSize: "1.5rem",
+      backgroundColor: theme.palette.background.default,
     },
   })
 );
@@ -32,7 +32,24 @@ const typeRulesText = "Required";
 
 let submited = false;
 
-const ValidForm: React.FC = () => {
+type DataValidCallback = React.Dispatch<React.SetStateAction<unknown>>;
+
+const dataValidation = (
+  isValid: boolean,
+  ok: DataValidCallback,
+  err: DataValidCallback,
+  msg: string
+): void => {
+  ok(isValid);
+  isValid ? err("") : err(msg);
+};
+
+interface Props {
+  title: string;
+  width: number;
+}
+
+const ValidForm = (props: Props): JSX.Element => {
   const classes = useStyles();
   const [name, setName] = React.useState("");
   const [type, setType] = React.useState({ value: "" });
@@ -40,87 +57,119 @@ const ValidForm: React.FC = () => {
   const [isTypeOk, setIsTypeOk] = React.useState(true);
   const [nameErrText, setNameErrText] = React.useState("");
   const [typeErrText, setTypeErrText] = React.useState("");
+  const [visibility, setVisibility] = React.useState("hidden");
 
-  // TODO: Create custom Effect Hook to validate to extract from ValidForm
-  const validateName = (data: string, submited = false): void => {
-    setName(data);
-    if (!submited) return;
-    if (data === "" || data.length < 10) {
-      setIsNameOk(false);
-      setNameErrText(nameRulesText);
-    } else {
-      setIsNameOk(true);
-      setNameErrText("");
-    }
+  const createErrVisible = ({
+    isTypeOk,
+    isNameOk,
+  }: {
+    isTypeOk: boolean;
+    isNameOk: boolean;
+  }) => {
+    return function useErrVisible() {
+      React.useEffect(() => {
+        if (submited && (!isTypeOk || !isNameOk)) setVisibility("visible");
+        else setVisibility("hidden");
+      });
+    };
   };
-
-  // TODO: Create custom Effect Hook to validate to extract from ValidForm
-  const validateType = (data: { value: string }, submited = false): void => {
-    setType(data);
-    if (!submited) return;
-    if (data.value === "") {
-      setIsTypeOk(false);
-      setTypeErrText(typeRulesText);
-    } else {
-      setIsTypeOk(true);
-      setTypeErrText("");
-    }
-  };
+  const useErrVisible = createErrVisible({
+    isTypeOk,
+    isNameOk,
+  });
+  useErrVisible();
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     submited = true;
-    validateName(name, submited);
-    validateType(type, submited);
+    dataValidation(
+      name !== "" && name.length >= 10,
+      setIsNameOk as React.Dispatch<React.SetStateAction<unknown>>,
+      setNameErrText as React.Dispatch<React.SetStateAction<unknown>>,
+      nameRulesText
+    );
+    dataValidation(
+      type.value !== "",
+      setIsTypeOk as React.Dispatch<React.SetStateAction<unknown>>,
+      setTypeErrText as React.Dispatch<React.SetStateAction<unknown>>,
+      typeRulesText
+    );
   };
 
   const handleNameChange = (event: React.ChangeEvent<{ value: string }>) => {
-    validateName(event.target.value, submited);
+    if (submited)
+      dataValidation(
+        event.target.value !== "" && event.target.value.length >= 10,
+        setIsNameOk as React.Dispatch<React.SetStateAction<unknown>>,
+        setNameErrText as React.Dispatch<React.SetStateAction<unknown>>,
+        nameRulesText
+      );
+    setName(event.target.value);
   };
 
   const handleTypeChange = (event: React.ChangeEvent<{ value: string }>) => {
-    validateType({ value: event.target.value }, submited);
+    if (submited)
+      dataValidation(
+        event.target.value !== "",
+        setIsTypeOk as React.Dispatch<React.SetStateAction<unknown>>,
+        setTypeErrText as React.Dispatch<React.SetStateAction<unknown>>,
+        typeRulesText
+      );
+    setType({ value: event.target.value });
   };
 
   return (
-    <form
-      className={classes.root}
-      onSubmit={handleSubmit}
-      noValidate
-      autoComplete="off"
-    >
-      <div className={classes.title}>
-        <label>Cool form</label>
-      </div>
-      <div>
-        <ValidTextField
-          id="standard-text-helper-text"
-          label="Name"
-          value={name}
-          onChange={(event: React.ChangeEvent<{ value: string }>) =>
-            handleNameChange(event)
-          }
-          error={!isNameOk}
-          helperText={nameErrText}
-        />
-      </div>
-      <div>
-        <ValidSelect
-          id="standard-select-helper-text"
-          label="Type"
-          value={type.value}
-          onChange={(event: React.ChangeEvent<{ value: string }>) =>
-            handleTypeChange(event)
-          }
-          error={!isTypeOk}
-          helperText={typeErrText}
-          options={types}
-        />
-      </div>
-      <Button type="submit" variant="contained" color="primary">
-        Submit
-      </Button>
-    </form>
+    <Box width={props.width}>
+      <form
+        className={classes.root}
+        onSubmit={handleSubmit}
+        noValidate
+        autoComplete="off"
+      >
+        <div className={classes.title}>
+          <Typography variant="h3" gutterBottom>
+            {props.title}
+          </Typography>
+        </div>
+
+        <div>
+          <ValidTextField
+            id="standard-text-helper-text"
+            label="Name"
+            value={name}
+            onChange={(event: React.ChangeEvent<{ value: string }>) =>
+              handleNameChange(event)
+            }
+            error={!isNameOk}
+            helperText={nameErrText}
+          />
+        </div>
+        <div>
+          <ValidSelect
+            id="standard-select-helper-text"
+            label="Type"
+            value={type.value}
+            onChange={(event: React.ChangeEvent<{ value: string }>) =>
+              handleTypeChange(event)
+            }
+            error={!isTypeOk}
+            helperText={typeErrText}
+            options={types}
+          />
+        </div>
+        <Box mt={5}>
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+          <Box mt={2} component="div" visibility={visibility}>
+            <Alert severity="error">
+              <AlertTitle>¡Complete el formulario!</AlertTitle>
+              Revise el <strong>formato</strong> de los datos
+            </Alert>
+          </Box>
+        </Box>
+      </form>
+    </Box>
   );
 };
 

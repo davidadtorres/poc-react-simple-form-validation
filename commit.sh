@@ -3,13 +3,13 @@
 # commit.sh
 #
 # Syntax:
-#   commit.sh "commit_message" [-r]
+#   commit.sh 'commit_message' [-r]
 #   -r: create a tag release
 #
 
 if [ $# -gt 2 ] || [ $# -lt 1 ]
 then
-  echo -e "SYNTAX ERROR: parameter expected!\n\ncommit.sh \"commit_message\" [-r]\n  -r: create a tag release"
+  echo -e "SYNTAX ERROR: parameter expected!\n\ncommit.sh 'commit_message' [-r]\n  -r: create a tag release"
   exit -1
 fi
 

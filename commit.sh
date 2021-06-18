@@ -31,4 +31,4 @@ else
   ((build -= 1))
   sed -i "s/BUILD=[0-9]\+/BUILD=$build/g" .env
 fi
-git log -n 5 --oneline
+git log -n 6 --oneline

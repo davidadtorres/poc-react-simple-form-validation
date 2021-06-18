@@ -22,10 +22,7 @@ git commit -m "$1"
 
 if [ $? == '0' ]
 then
-   if [ $# -eq 2 ] && [ $1 == '-r' ]
-   then    
-     npm run release
-   fi
+   npm run release
    git push --follow-tags origin-git master
 else
   ((build -= 1))

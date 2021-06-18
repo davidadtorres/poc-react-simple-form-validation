@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/davidadtorres/poc-react-simple-form-validation/compare/v1.3.0...v2.0.0) (2021-06-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* update commit.sh
+* update commit.sh
+
+* update commit.sh ([0fe133b](https://github.com/davidadtorres/poc-react-simple-form-validation/commit/0fe133b84fde6f00aeb6687bf852c5ca864eb10d))
+* update commit.sh ([2191225](https://github.com/davidadtorres/poc-react-simple-form-validation/commit/2191225857584f3cb58be36d1eb02ab66de9fc40))
+
 ## [1.3.0](https://github.com/davidadtorres/poc-react-simple-form-validation/compare/v1.2.2...v1.3.0) (2021-06-18)
 
 

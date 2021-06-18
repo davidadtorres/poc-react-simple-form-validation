@@ -1,4 +1,4 @@
-# poc-simple-form-validated
+# poc-react-simple-form-validation
 
 `Initiated at 03-04-2021`
 

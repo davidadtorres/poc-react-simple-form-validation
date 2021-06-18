@@ -1,5 +1,5 @@
 {
-  "name": "poc-simple-form-validated",
+  "name": "poc-react-simple-form-validation",
   "version": "1.2.0",
   "private": true,
   "dependencies": {
@@ -62,6 +62,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidadtorres/poc-simple-form-validated.git"
+    "url": "https://github.com/davidadtorres/poc-react-simple-form-validation.git"
   }
 }
